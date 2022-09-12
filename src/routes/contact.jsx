@@ -1,107 +1,79 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { Grid, TextField } from '@mui/material'
+import { Button, Grid, TextField } from '@mui/material'
 import { Layout } from '../components/layout'
 import { Article, ArticleContent, ArticleMedia } from '../components/article'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import { useForm } from '../hooks'
+import { emails, intRandom, lastNames, names, comments } from '../helpers'
 
-const names = [
-  'Joressa',
-  'Josiah',
-  'Alondra',
-  'Jesus',
-  'Jazmyn',
-  'Luis',
-  'Juan',
-  'Pedro',
-  'Maria',
-  'Jose',
-  'Adela',
-] //11
+const formData = {
+  nombre: '',
+  correo: '',
+  comentario: '',
+}
 
-const lastNames = [
-  'Garcia',
-  'Rodriguez',
-  'Lopez',
-  'Gonzalez',
-  'Perez',
-  'Sanchez',
-  'Ramirez',
-  'Morales',
-  'Hernandez',
-  'Diaz',
-  'Gomez',
-  'Vasquez',
-  'Castro',
-  'Ramos',
-  'Ortega',
-  'Marquez',
-  'Flores',
-] //20
-
-const comments = [
-  'Adipisicing velit nulla amet aute labore sint.',
-  'Do ut non culpa deserunt dolor sunt deserunt veniam laboris proident adipisicing dolor fugiat.',
-  'Elit ipsum deserunt ullamco proident irure veniam anim ipsum ut nulla cupidatat consequat labore Lorem.',
-  'Cupidatat eiusmod eiusmod eiusmod eiusmod.',
-  'Minim aute nostrud minim exercitation irure aliqua cillum quis aliquip ut reprehenderit duis.',
-  'Deserunt aute aute voluptate veniam aute officia quis quis minim sint elit.',
-  'Cillum eiusmod eiusmod eiusmod eiusmod.',
-  'In amet enim dolore cillum sit qui do laboris cillum et enim qui in.',
-] // 8
-const emails = [
-  '@email.com',
-  '@hotmail.com',
-  '@gmail.com',
-  '@yahoo.com',
-  '@outlook.com',
-  '@live.com',
-  '@aol.com',
-  '@icloud.com',
-] //8
-
-const intRandom = (min, max) => {
-  return Math.floor(Math.random() * (max - min)) + min
+const formValidations = {
+  correo: [(value) => value.includes('@'), 'El correo debe de tener una @'],
+  nombre: [
+    (value) => value.length >= 3,
+    'El nombre debe de tener más de 3 letras',
+  ],
+  comentario: [
+    (value) => value.length >= 10,
+    'El comentario debe de tener más de 10 letras',
+  ],
 }
 
 export default function ContactPage() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [comment, setComment] = useState('')
+  const {
+    correo,
+    nombre,
+    comentario,
+    onInputChange,
+    formState,
+    correoValid,
+    nombreValid,
+    comentarioValid,
+    isFormValid,
+    setFormStates,
+  } = useForm(formData, formValidations)
 
   const { code } = useParams()
+
+  const [formSubmitted, setFormSubmitted] = useState(false)
+
+  const onSubmit = (event) => {
+    event.preventDefault()
+    setFormSubmitted(true)
+
+    console.log(formState)
+    if (!isFormValid) return
+    else console.log('nice')
+  }
 
   useEffect(() => {
     const indexName = intRandom(0, names.length - 1)
     const indexLastName = intRandom(0, lastNames.length - 1)
     if (code == '1234') {
-      setName(names[indexName] + ' ' + lastNames[indexLastName])
-      const completeName = names[indexName] + ' ' + lastNames[indexLastName]
-      setEmail(
-        completeName.replace(' ', '.').toLocaleLowerCase() +
-          emails[intRandom(0, 8)]
-      )
-      setComment(comments[intRandom(0, 8)])
+      setFormStates({
+        nombre: names[indexName] + ' ' + lastNames[indexLastName],
+        correo:
+          (
+            names[indexName] +
+            '.' +
+            lastNames[indexLastName]
+          ).toLocaleLowerCase() + emails[intRandom(0, emails.length - 1)],
+        comentario: comments[intRandom(0, comments.length - 1)],
+      })
     }
   }, [code])
-
-  const handleNameInput = (event) => {
-    setName(event.target.value)
-  }
-
-  const handleEmailInput = (event) => {
-    setEmail(event.target.value)
-  }
-
-  const handleCommentInput = (event) => {
-    setComment(event.target.value)
-  }
 
   return (
     <Layout>
       <Article>
         <ArticleContent title="Contacto">
-          <form>
+          <form onSubmit={onSubmit}>
             <Grid container>
               <Grid item xs={12} sx={{ mt: 2 }}>
                 <TextField
@@ -109,9 +81,11 @@ export default function ContactPage() {
                   type="text"
                   placeholder="Escribe tu nombre"
                   fullWidth
-                  name="name"
-                  value={name}
-                  onChange={handleNameInput}
+                  name="nombre"
+                  value={nombre}
+                  onChange={onInputChange}
+                  error={!!nombreValid && formSubmitted}
+                  helperText={nombreValid}
                 />
               </Grid>
 
@@ -121,9 +95,11 @@ export default function ContactPage() {
                   type="email"
                   placeholder="Escribe tu email"
                   fullWidth
-                  name="email"
-                  value={email}
-                  onChange={handleEmailInput}
+                  name="correo"
+                  value={correo}
+                  onChange={onInputChange}
+                  error={!!correoValid && formSubmitted}
+                  helperText={correoValid}
                 />
               </Grid>
               <Grid item xs={12} sx={{ mt: 2 }}>
@@ -134,10 +110,18 @@ export default function ContactPage() {
                   multiline
                   rows={5}
                   fullWidth
-                  name="comment"
-                  value={comment}
-                  onChange={handleCommentInput}
+                  name="comentario"
+                  value={comentario}
+                  onChange={onInputChange}
+                  error={!!comentarioValid && formSubmitted}
+                  helperText={comentarioValid}
                 />
+              </Grid>
+
+              <Grid item xs={12} sm={12} sx={{ mt: 2 }}>
+                <Button type="submit" variant="contained" fullWidth>
+                  Login
+                </Button>
               </Grid>
             </Grid>
           </form>
