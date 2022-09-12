@@ -36,7 +36,7 @@ export function Hero({ title, content, illustration }) {
         <div className="hero-inner relative lg:flex">
           <div
             className="hero-copy bg-white pt-10 pb-16 lg:pt-16 lg:pr-20"
-            style={{ minWidth: '600px' }}
+            style={{ width: '600px' }}
           >
             <div className="mx-auto w-full max-w-3xl">
               <h1
