@@ -7,6 +7,9 @@ import { useParams } from 'react-router-dom'
 import { useForm } from '../hooks'
 import { emails, intRandom, lastNames, names, comments } from '../helpers'
 
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 const formData = {
   nombre: '',
   correo: '',
@@ -48,8 +51,12 @@ export default function ContactPage() {
     setFormSubmitted(true)
 
     console.log(formState)
-    if (!isFormValid) return
-    else console.log('nice')
+    if (!isFormValid) {
+      toast.error('Formulario invalido')
+      return
+    } else {
+      toast.success('Formulario enviado')
+    }
   }
 
   useEffect(() => {
@@ -120,13 +127,14 @@ export default function ContactPage() {
 
               <Grid item xs={12} sm={12} sx={{ mt: 2 }}>
                 <Button type="submit" variant="contained" fullWidth>
-                  Login
+                  Enviar
                 </Button>
               </Grid>
             </Grid>
           </form>
         </ArticleContent>
       </Article>
+      <ToastContainer />
     </Layout>
   )
 }
