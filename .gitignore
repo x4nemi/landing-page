@@ -1,0 +1,11 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+.eslintignore
+.eslintrc.js
+.gitignore
+.npmignore
+.prettierrc
+.prettierignore
