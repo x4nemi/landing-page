@@ -43,7 +43,8 @@ export function Hero({ title, content, illustration }) {
                 ref={(el) => (scrollRevealRef.current[0] = el)}
                 className="mt-0 mb-4 text-4xl font-bold md:text-5xl "
               >
-                {title}
+                <span className="text-primary-600">MBTI</span>{' '}
+                <span>Type Me</span>
               </h1>
               <p
                 ref={(el) => (scrollRevealRef.current[1] = el)}
@@ -53,13 +54,13 @@ export function Hero({ title, content, illustration }) {
               </p>
             </div>
 
-            <div ref={(el) => (scrollRevealRef.current[2] = el)}>
+            {/* <div ref={(el) => (scrollRevealRef.current[2] = el)}>
               <NewsletterForm
                 className="m-0 mt-8 max-w-md md:flex"
                 submitBtn="Get early access"
                 onSubmit={onNewsletterSubmit}
               />
-            </div>
+            </div> */}
           </div>
 
           {!!illustration && (

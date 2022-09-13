@@ -56,6 +56,8 @@ export default function ContactPage() {
       return
     } else {
       toast.success('Formulario enviado')
+      setFormStates(formData)
+      setFormSubmitted(false)
     }
   }
 
