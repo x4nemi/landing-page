@@ -7,6 +7,8 @@ import About from './routes/about'
 import Contact from './routes/contact'
 import Faqs from './routes/faqs'
 import Support from './routes/support'
+import { Provider } from 'react-redux'
+import { store } from './store/store'
 
 export default function App() {
   /**
@@ -19,16 +21,18 @@ export default function App() {
 
   return (
     <BrowserRouter basename={basename}>
-      <ScrollToTop>
-        <Routes>
-          <Route path="/*" element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route path="contact/:code" element={<Contact />} />
-          <Route path="contact/*" element={<Contact />} />
-          <Route path="faqs" element={<Faqs />} />
-          <Route path="support" element={<Support />} />
-        </Routes>
-      </ScrollToTop>
+      <Provider store={store}>
+        <ScrollToTop>
+          <Routes>
+            <Route path="/*" element={<Home />} />
+            <Route path="about" element={<About />} />
+            <Route path="contact/:code" element={<Contact />} />
+            <Route path="contact/*" element={<Contact />} />
+            <Route path="faqs" element={<Faqs />} />
+            <Route path="support" element={<Support />} />
+          </Routes>
+        </ScrollToTop>
+      </Provider>
     </BrowserRouter>
   )
 }

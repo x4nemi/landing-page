@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { Button, Grid, TextField } from '@mui/material'
 import { Layout } from '../components/layout'
@@ -9,6 +10,7 @@ import { emails, intRandom, lastNames, names, comments } from '../helpers'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { startNewContact } from '../store/thunks'
 
 const formData = {
   nombre: '',
@@ -29,6 +31,9 @@ const formValidations = {
 }
 
 export default function ContactPage() {
+  const dispatch = useDispatch()
+  const { contacts } = useSelector((state) => state.contacts)
+
   const {
     correo,
     nombre,
@@ -58,6 +63,7 @@ export default function ContactPage() {
       toast.success('Formulario enviado')
       setFormStates(formData)
       setFormSubmitted(false)
+      dispatch(startNewContact(formState))
     }
   }
 
