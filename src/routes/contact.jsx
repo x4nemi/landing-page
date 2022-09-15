@@ -10,7 +10,7 @@ import { emails, intRandom, lastNames, names, comments } from '../helpers'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { startNewContact } from '../store/thunks'
+import { startLoadingContacts, startNewContact } from '../store/thunks'
 
 const formData = {
   nombre: '',
@@ -32,7 +32,7 @@ const formValidations = {
 
 export default function ContactPage() {
   const dispatch = useDispatch()
-  const { contacts } = useSelector((state) => state.contacts)
+  const { isLoading } = useSelector((state) => state.contacts)
 
   const {
     correo,
@@ -55,10 +55,8 @@ export default function ContactPage() {
     event.preventDefault()
     setFormSubmitted(true)
 
-    console.log(formState)
     if (!isFormValid) {
       toast.error('Formulario invalido')
-      return
     } else {
       toast.success('Formulario enviado')
       setFormStates(formData)
@@ -134,7 +132,12 @@ export default function ContactPage() {
               </Grid>
 
               <Grid item xs={12} sm={12} sx={{ mt: 2 }}>
-                <Button type="submit" variant="contained" fullWidth>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  disabled={isLoading}
+                >
                   Enviar
                 </Button>
               </Grid>
